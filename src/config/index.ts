@@ -13,6 +13,14 @@ export default {
   databaseURI: process.env.DATABASE_URI,
   databaseURL: process.env.DATABASE_BASE_URL,
   appName: 'Backend',
+  authCookie: {
+    name:"authtoken",
+    config:{
+      sameSite: 'lax',
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    }
+  },
   nodeEnv: process.env.NODE_ENV,
   cookieSecret: process.env.COOKIE_SECRET,
   csrfSecret: process.env.CSRF_SECRET ?? '',

@@ -27,42 +27,10 @@ export const seedDB = async () => {
   // Base Table
   await Promise.all([
     db.insert(schemas.users).values(seedData.users),
-    db.insert(schemas.brands).values(seedData.brands),
     db.insert(schemas.promotions).values(seedData.promotions),
-    db.insert(schemas.tags).values(seedData.tags),
-    db.insert(schemas.noteCategories).values(seedData.noteCategories),
   ]);
 
   logger.info('Success seeding base tables');
-
-  logger.info('Seeding dependence one tables');
-
-  // Dependence One Table
-  await Promise.all([
-    db.insert(schemas.notes).values(seedData.notes),
-    db.insert(schemas.perfumes).values(seedData.perfumes),
-    db.insert(schemas.articles).values(seedData.articles),
-  ]);
-
-  logger.info('Success seeding dependence one tables');
-
-  logger.info('Seeding dependence two tables');
-
-  // Dependence Two Tables
-  for (const perfumeNoteAlias of seedData.perfumeNoteAliases) {
-    await db.insert(schemas.perfumeNoteAliases).values(perfumeNoteAlias);
-  }
-  for (const perfumeReview of seedData.perfumeReviews) {
-    await db.insert(schemas.perfumeReviews).values(perfumeReview);
-  }
-  for (const favoritedNote of seedData.userFavoritedNotes) {
-    await db.insert(schemas.userFavoritedNotes).values(favoritedNote);
-  }
-  for (const likedPerfume of seedData.userLikedPerfumes) {
-    await db.insert(schemas.userLikedPerfumes).values(likedPerfume);
-  }
-
-  logger.info('Success seeding dependence two tables');
 
   logger.info('Success seeding DB');
 };

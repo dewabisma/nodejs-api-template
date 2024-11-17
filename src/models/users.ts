@@ -8,8 +8,6 @@ import {
   index,
   unique,
 } from 'drizzle-orm/pg-core';
-import { notes } from './notes.js';
-import { perfumes } from './perfumes.js';
 import { enumToPgEnum } from '../utils/drizzleEnum.js';
 
 export enum UserRole {
@@ -43,13 +41,13 @@ export const tokenType = pgEnum('token_type', enumToPgEnum(TokenType));
 export const users = pgTable(
   'users',
   {
-    id: bigint('id', { mode: 'bigint' }).unique().primaryKey(),
+    id: bigint('id', { mode: 'bigint' }).primaryKey(),
     username: varchar('username', { length: 255 }).unique(),
     email: varchar('email', { length: 255 }).unique(),
     dateOfBirth: varchar('date_of_birth', { length: 10 }),
     password: varchar('password', { length: 255 }),
     role: userRole('role').default(UserRole.Customer),
-    oauthProvider: oauthProvider('oauth_provider'),
+    oauthProvider: oauthProvider('oauth_provider').default(OauthProvider.None),
     oauthUid: text('oauth_uid'),
     status: userStatus('user_status').default(UserStatus.Inactive),
     lastLoginAt: timestamp('last_login_at').defaultNow(),
@@ -62,50 +60,10 @@ export const users = pgTable(
   }),
 );
 
-export const userFavoritedNotes = pgTable(
-  'user_favorited_notes',
-  {
-    id: bigint('id', { mode: 'bigint' }).unique().primaryKey().notNull(),
-    userId: bigint('user_id', { mode: 'bigint' })
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
-    noteId: bigint('note_id', { mode: 'bigint' })
-      .notNull()
-      .references(() => notes.id, { onDelete: 'restrict' }),
-    createdAt: timestamp('created_at').defaultNow(),
-    updatedAt: timestamp('updated_at').defaultNow(),
-  },
-  (table) => ({
-    userIdx: index('ufn_user_idx').on(table.userId),
-    noteIdx: index('ufn_note_idx').on(table.noteId),
-    unique: unique('ufn_unique_favorited').on(table.userId, table.noteId),
-  }),
-);
-
-export const userLikedPerfumes = pgTable(
-  'user_liked_perfumes',
-  {
-    id: bigint('id', { mode: 'bigint' }).unique().primaryKey().notNull(),
-    userId: bigint('user_id', { mode: 'bigint' })
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
-    perfumeId: bigint('perfume_id', { mode: 'bigint' })
-      .notNull()
-      .references(() => perfumes.id, { onDelete: 'restrict' }),
-    createdAt: timestamp('created_at').defaultNow(),
-    updatedAt: timestamp('updated_at').defaultNow(),
-  },
-  (table) => ({
-    userIdx: index('ulp_user_idx').on(table.userId),
-    perfumeIdx: index('ulp_perfume_idx').on(table.perfumeId),
-    unique: unique('ulp_unique_liked').on(table.userId, table.perfumeId),
-  }),
-);
-
 export const userTokens = pgTable(
   'user_tokens',
   {
-    id: bigint('id', { mode: 'bigint' }).unique().primaryKey().notNull(),
+    id: bigint('id', { mode: 'bigint' }).primaryKey(),
     userId: bigint('user_id', { mode: 'bigint' })
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),

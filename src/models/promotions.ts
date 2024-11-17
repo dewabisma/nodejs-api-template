@@ -11,7 +11,7 @@ import {
 export const promotions = pgTable(
   'promotions',
   {
-    id: bigint('id', { mode: 'bigint' }).unique().primaryKey().notNull(),
+    id: bigint('id', { mode: 'bigint' }).primaryKey(),
     title: varchar('title', { length: 1000 }),
     label: varchar('label', { length: 1000 }),
     href: text('href'),

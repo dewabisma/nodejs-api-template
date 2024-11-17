@@ -14,7 +14,7 @@ const isAuthenticated = async (
   res: Response,
   next: NextFunction,
 ) => {
-  if (!req.cookies.wangiwangi) {
+  if (!req.cookies[env.authCookieName]) {
     res
       .status(StatusCodes.UNAUTHORIZED)
       .json({ error: 'You need to login to access this.' });
@@ -24,7 +24,7 @@ const isAuthenticated = async (
   try {
     const userServiceInstance = Container.get(UserService);
 
-    const token = req.cookies.wangiwangi;
+    const token = req.cookies[env.authCookieName];
     const data = jwt.verify(token, env.jwtSecret) as CurrentUser;
 
     // We need to cast the id as BigInt because originally it's serialized as string when creating a JWT..
@@ -38,7 +38,7 @@ const isAuthenticated = async (
     logger.error(e);
 
     if (e instanceof JsonWebTokenError) {
-      res.clearCookie('wangibanget');
+      res.clearCookie(env.authCookieName);
 
       res.status(StatusCodes.BAD_REQUEST).json({
         error: 'Token is already expired, please re-login.',

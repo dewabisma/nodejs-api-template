@@ -16,11 +16,7 @@ export const login = async (req: Request, res: Response) => {
   const authServiceInstance = Container.get(AuthService);
   const { user, token } = await authServiceInstance.login(username, password);
 
-  res.cookie('wangiwangi', token, {
-    sameSite: 'lax',
-    httpOnly: true,
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-  });
+  res.cookie(env.authCookie.name, token, env.authCookie.config);
   res.status(StatusCodes.OK).json({ user });
 };
 
@@ -36,10 +32,7 @@ export const logout = async (req: Request, res: Response) => {
   const authServiceInstance = Container.get(AuthService);
   await authServiceInstance.logout(BigInt(req.currentUser.id));
 
-  res.clearCookie('wangiwangi', {
-    sameSite: 'lax',
-    httpOnly: true,
-  });
+  res.clearCookie(env.authCookie.name, env.authCookie.config);
   res.status(StatusCodes.NO_CONTENT).end();
 };
 
@@ -50,10 +43,7 @@ export const checkAuthentication = async (req: Request, res: Response) => {
   logger.debug('Calling check authentication endpoint.');
 
   if (!req.currentUser) {
-    res.clearCookie('wangiwangi', {
-      sameSite: 'lax',
-      httpOnly: true,
-    });
+    res.clearCookie(env.authCookie.name, env.authCookie.config);
 
     throw new errorHandlers.UnauthenticatedError("You aren't logged in yet.");
   }
@@ -119,12 +109,8 @@ export const validateOAuthToken = async (req: Request, res: Response) => {
   const authServiceInstance = Container.get(AuthService);
   const { user, token } =
     await authServiceInstance.validateOauthToken(oauthToken);
-
-  res.cookie('wangiwangi', token, {
-    sameSite: 'lax',
-    httpOnly: true,
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-  });
+    
+  res.cookie(env.authCookie.name, token, env.authCookie.config);
   res.status(StatusCodes.OK).json({ user });
 };
 

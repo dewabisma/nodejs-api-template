@@ -1,9 +1,6 @@
 import express from 'express';
 
 import * as user from '../controllers/user.js';
-import * as userLikedPerfume from '../controllers/userLikedPerfume.js';
-import * as userFavoritedNote from '../controllers/userFavoritedNote.js';
-import * as note from '../controllers/note.js';
 
 import { validateRequest } from '../middlewares/validateInput.js';
 
@@ -12,8 +9,6 @@ import type {
   UserResetPassword,
   UserVerification,
 } from '../interfaces/User.js';
-import type { CreateUserFavoritedNote } from '../interfaces/UserFavoritedNote.js';
-import type { CreateUserLikedPerfume } from '../interfaces/UserLikedPerfume.js';
 
 import { serializeQueryOptions } from '../middlewares/serialize.js';
 import {
@@ -23,8 +18,6 @@ import {
   queryOptionsValidation,
   verifyUserValidation,
   userResetPasswordValidation,
-  userFavoritedNoteValidation,
-  userLikedPerfumeValidation,
 } from '../validations/index.js';
 import { isAuthenticated, isAuthorizedAs } from '../middlewares/auth.js';
 import { UserRole } from '../models/users.js';
@@ -67,57 +60,6 @@ router.get(
   validateRequest<UserVerification>('query', verifyUserValidation),
   user.verification,
 );
-
-router
-  .route('/liked-perfumes')
-  .get(
-    serializeQueryOptions,
-    validateRequest<DB.QueryOptions>('query', queryOptionsValidation),
-    userLikedPerfume.query,
-  )
-  .post(
-    isAuthenticated,
-    validateRequest<Omit<CreateUserLikedPerfume, 'userId'>>(
-      'body',
-      userLikedPerfumeValidation,
-    ),
-    userLikedPerfume.create,
-  )
-  .delete(
-    isAuthenticated,
-    validateRequest<{ ids: bigint[] }>('body', bodyIdsValidation),
-    userLikedPerfume.deleteMany,
-  );
-
-router
-  .route('/favorited-notes')
-  .get(
-    serializeQueryOptions,
-    validateRequest<DB.QueryOptions>('query', queryOptionsValidation),
-    userFavoritedNote.query,
-  )
-  .post(
-    isAuthenticated,
-    validateRequest<Omit<CreateUserFavoritedNote, 'userId'>>(
-      'body',
-      userFavoritedNoteValidation,
-    ),
-    userFavoritedNote.create,
-  )
-  .delete(
-    isAuthenticated,
-    validateRequest<{ ids: bigint[] }>('body', bodyIdsValidation),
-    userFavoritedNote.deleteMany,
-  );
-
-router
-  .route('/not-favorited-notes')
-  .get(
-    isAuthenticated,
-    serializeQueryOptions,
-    validateRequest<DB.QueryOptions>('query', queryOptionsValidation),
-    note.queryNotFavoritedByUser,
-  );
 
 router
   .route('/:id')
