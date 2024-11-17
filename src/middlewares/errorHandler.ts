@@ -33,9 +33,11 @@ const errorHandler = (
 
     logger.error(customError);
 
-    return res.status(customError.statusCode).json({
+    res.status(customError.statusCode).json({
       errors: [{ field: column, message: customError.message }],
     });
+
+    return;
   }
 
   if (err instanceof Error) {

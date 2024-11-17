@@ -1,5 +1,4 @@
 import 'reflect-metadata'; // We need this in order to use @Decorators
-import 'express-async-errors'; // Patch for catching throw to error middleware
 import './config/bigint.js'; // Patch for serializing big int
 import './config/JSON.js'; // Patch for deserializing big int
 

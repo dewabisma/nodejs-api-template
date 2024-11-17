@@ -77,20 +77,21 @@ export default class AuthService {
       );
     }
 
-    const { delivered } = await this.mailer.SendAccountVerificationEmail(
-      userRecord.email!,
-      userRecord!.id,
-      verifyToken,
-    );
+    // TODO: if you need mail service then turn on this code.
+    // const { delivered } = await this.mailer.SendAccountVerificationEmail(
+    //   userRecord.email!,
+    //   userRecord!.id,
+    //   verifyToken,
+    // );
 
-    if (delivered === 1)
-      this.logger.info(
-        `Success sending verification email to ${userRecord.email}`,
-      );
-    else
-      this.logger.error(
-        `Failed sending verification email to ${userRecord.email}`,
-      );
+    // if (delivered === 1)
+    //   this.logger.info(
+    //     `Success sending verification email to ${userRecord.email}`,
+    //   );
+    // else
+    //   this.logger.error(
+    //     `Failed sending verification email to ${userRecord.email}`,
+    //   );
 
     return { user: userRecord, token: verifyToken };
   }

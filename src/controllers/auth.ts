@@ -109,7 +109,7 @@ export const validateOAuthToken = async (req: Request, res: Response) => {
   const authServiceInstance = Container.get(AuthService);
   const { user, token } =
     await authServiceInstance.validateOauthToken(oauthToken);
-    
+
   res.cookie(env.authCookie.name, token, env.authCookie.config);
   res.status(StatusCodes.OK).json({ user });
 };

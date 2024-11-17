@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Container } from 'typedi';
 import env from '../config/index.js';
+import nodemailer from 'nodemailer';
 import { sqlBuilders } from './drizzleOperators.js';
 import logger from './logger.js';
 import { customErrors } from './customError.js';
@@ -26,6 +27,17 @@ export default ({
 
     Container.set('psql', psqlConnection);
     Container.set('sqlBuilders', sqlBuilders);
+
+    Container.set('emailSender', env.email.sender);
+    Container.set('emailReceiver', env.email.receiver);
+    Container.set(
+      'emailClient',
+      nodemailer.createTransport({
+        host: env.email.host,
+        port: env.email.port,
+        auth: env.email.auth,
+      }),
+    );
 
     Container.set('errors', customErrors);
     Container.set('logger', logger);
