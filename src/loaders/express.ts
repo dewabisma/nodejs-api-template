@@ -14,9 +14,9 @@ import { doubleCsrfProtection, getCsrfToken } from '../middlewares/csrf.js';
 import { googleOAuthStrategy } from '../middlewares/oauth.js';
 import { customErrors } from './customError.js';
 
-import authRoutes from '../routes/auth.js';
-import userRoutes from '../routes/user.js';
-import promotionRoutes from '../routes/promotion.js';
+import authRoutes from '@/modules/users/routes/auth.js';
+import userRoutes from '@/modules/users/routes/user.js';
+import promotionRoutes from '@/modules/promotions/routes/promotion.js';
 
 import logger from './logger.js';
 

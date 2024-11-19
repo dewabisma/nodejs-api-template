@@ -6,9 +6,14 @@ import { sqlBuilders } from './drizzleOperators.js';
 import logger from './logger.js';
 import { customErrors } from './customError.js';
 import { generateUniqueID } from '../utils/generateId.js';
-import { TokenType, UserRole, UserStatus } from '../models/users.js';
+
 import slugify from '../utils/slugify.js';
 import { deleteUnusedAssets } from '../utils/cleanFiles.js';
+import {
+  TokenType,
+  UserRole,
+  UserStatus,
+} from '@/modules/users/models/users.js';
 
 export default ({
   psqlConnection,

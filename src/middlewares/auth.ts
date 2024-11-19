@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken';
 import type { Request, Response, NextFunction } from 'express';
-import env from '../config/index.js';
+import env from '@/config/index.js';
 import logger from '../loaders/logger.js';
-import type { CurrentUser } from '../interfaces/User.js';
 import { StatusCodes } from '../constants/statusCode.js';
-import type { UserRole } from '../models/users.js';
 import { Container } from 'typedi';
-import UserService from '../services/user.js';
+import UserService from '@/modules/users/services/user.js';
+import type { CurrentUser } from '@/modules/users/interfaces/User.js';
+import type { UserRole } from '@/modules/models.js';
 const { JsonWebTokenError } = jwt;
 
 const isAuthenticated = async (
@@ -14,7 +14,7 @@ const isAuthenticated = async (
   res: Response,
   next: NextFunction,
 ) => {
-  if (!req.cookies[env.authCookieName]) {
+  if (!req.cookies[env.authCookie.name]) {
     res
       .status(StatusCodes.UNAUTHORIZED)
       .json({ error: 'You need to login to access this.' });
@@ -24,7 +24,7 @@ const isAuthenticated = async (
   try {
     const userServiceInstance = Container.get(UserService);
 
-    const token = req.cookies[env.authCookieName];
+    const token = req.cookies[env.authCookie.name];
     const data = jwt.verify(token, env.jwtSecret) as CurrentUser;
 
     // We need to cast the id as BigInt because originally it's serialized as string when creating a JWT..
@@ -38,7 +38,7 @@ const isAuthenticated = async (
     logger.error(e);
 
     if (e instanceof JsonWebTokenError) {
-      res.clearCookie(env.authCookieName);
+      res.clearCookie(env.authCookie.name);
 
       res.status(StatusCodes.BAD_REQUEST).json({
         error: 'Token is already expired, please re-login.',

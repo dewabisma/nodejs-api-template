@@ -40,7 +40,17 @@
     // "lib": ["es2022", "dom", "dom.iterable"],
 
     /* If your code doesn't run in the DOM: */
-    "lib": ["es2022"]
+    "lib": ["es2022"],
+
+    // Path aliases
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/modules/*": ["./src/modules/*"],
+      "@/loaders/*": ["./src/loaders/*"],
+      "@/middlewares/*": ["./src/middlewares/*"],
+      "@/utils/*": ["./src/utils/*"]
+    }
   },
   "include": ["src/**/*", "__tests__/**/*", "drizzle.config.js"]
 }

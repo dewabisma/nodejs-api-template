@@ -1,8 +1,8 @@
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import type { CurrentUser } from '../../interfaces/User.ts';
 import type * as query from '../../loaders/drizzleOperators.ts';
-import type * as schemas from '../../models/index.ts';
+import type * as schemas from '@/modules/models.ts';
 import type { customErrors } from '../../loaders/customError.ts';
+import type { CurrentUser } from '@/modules/users/interfaces/User.ts';
 
 declare global {
   namespace Express {
@@ -31,7 +31,7 @@ declare global {
     export type Driver = NodePgDatabase<typeof schemas>;
     export type QueryOptions = query.QueryOptions;
   }
-  
+
   namespace CustomError {
     export type Handlers = typeof customErrors;
   }
