@@ -1,6 +1,6 @@
-# WangiLoka
+# Node.js API Template
 
-A website about parfume finder with the goals help user explore the wonderful world of indonesia parfumes also helps parfum brands make pressence to user who need parfumes.
+A template that is made using bullet proof architecture for developing REST API using Node.js.
 
 # Project Setup
 
